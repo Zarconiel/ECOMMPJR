@@ -1,0 +1,9 @@
+{
+    "57a2d1f0-5e7b-485b-9803-a93393fd0f2a": {
+        "nome": "string",
+        "email": "user@example.com",
+        "cnpj": "string",
+        "cidade": "string",
+        "telefone": "string",
+        "ramo": "string",
+        "id": 
