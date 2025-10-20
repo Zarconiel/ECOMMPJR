@@ -1,94 +1,67 @@
-# Desafio_api-ECOMPJR
- construçao de uma api para cadastro editavel de empresas.
+# Desafio API ECOMPJR: Cadastro de Empresas
+**Sobre o Projeto**
+Este projeto consiste na construção de uma API RESTful para o gerenciamento (Cadastro, Leitura, Atualização e Deleção - CRUD) de informações de empresas.
 
- ## Funcionalidades 
- *cria, lê atualiza e deleta usuarios (crud)
- 
+A API permite registrar novas empresas, realizar consultas específicas por ID, atualizar dados cadastrais e remover registros, sendo ideal para sistemas que necessitam de um repositório centralizado de dados empresariais.
 
- ## Tecnologias
- *Python 3.13.2
- *Fastapi
- *Pydantic
- *Json
- *datetime
- *uvicorn
- 
- ## Aplicacação
- 
- ### Rotas do tipo Get
+## ⚙️Funcionalidades
+As principais funcionalidades da API são:
 
- 1-
- '''@router.get("/", response_model=list[User])
-def list_users():
-    return list(db.values())'''
+- Criação de novos cadastros de empresas.
 
-Essa rota é feita para mostrar uma lista de empresas cadastradas 
-*endpint: http://127.0.0.1:8000/users/ 
+- Leitura da lista completa de empresas ou de uma empresa específica por ID.
 
-2-
-'''@router.get("/{user_id}", response_model=User)
-def get_user(user_id: str):
-    if user_id not in db:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
-    return db[user_id] 
-    '''
+- Atualização das informações cadastrais (com restrições em campos críticos).
 
-Essa rota faz busca especificas das empresas cadastradas atraves do seu ID 
-*endpoint: http://127.0.0.1:8000/users/{id}
+- Deleção de registros de empresas.
 
-### Rotas do tipo Post 
-1- 
-'''@router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
-def create_user(payload: UserCreate):
-    if email_exists(payload.email):
-        raise HTTPException(status_code=400, detail="E-mail já cadastrado.")
-    if cnpj_exists(payload.cnpj):
-        raise HTTPException(status_code=400, detail="CNPJ já cadastrado.")
+- Validação de unicidade de E-mail e CNPJ no momento do cadastro.
 
-    new_id = uuid4()
-    created_at = datetime.utcnow()
+## 🛠️Tecnologias Utilizadas
+O projeto foi desenvolvido com as seguintes ferramentas e bibliotecas:
 
-    user = User(id=new_id, created_at=created_at, **payload.dict())
-    db[str(new_id)] = user.dict()
-    save_db(db)
-    return user
-    '''
+- Linguagem: Python 3.13.2
 
-Essa rota é utilizada para o cadastro das empresas, ela verifica a existencia de Emails e CNPJ iguais se existir retornar um erro que esse campo ja existe em outra empresa
-*endpoint: http://127.0.0.1:8000/users/cadastro 
+- Framework Web: FastAPI
+
+- Validação de Dados: Pydantic
+
+- Manipulação de Dados: JSON
+
+- Data e Hora: datetime
+
+- Servidor ASGI: Uvicorn
+
+## 🧭Endpoints da API
+A documentação interativa (Swagger UI) está disponível em http://127.0.0.1:8000/docs.
+
+## Rsumo das rotas
+| Operação  | Método HTTP || Rota (Endpoint)|Finalidade |Status de Sucesso|
+| CREATE    | POST        || /users/cadastro| Registra uma nova empresa.|201 Created|
+| READ (Todos)| GET       || /users/ |Retorna a lista completa de empresas.|200 OK|
+| READ        | GET || /users/{user_id} | Busca uma empresa pelo ID.|200 OK|
+(Específico)
+| UPDATE| PUT             || /{user_id}/edit | Atualiza dados cadastrais da empresa (exceto e-mail/CNPJ/criação).|200 OK|
+| DELETE | DELETE         || /{user_id}/del | Remove o registro de uma empresa.|204 No Content|
+
+## Detalhe dos Endpoints
+
+|Rota|	Tipo|	Parâmetros / Body (Payload)|	Descrição da Funcionalidade|	Observações Importantes|
+|/users/|	GET	|Nenhum	|Lista todas as empresas cadastradas no sistema.|	Retorna uma lista de objetos User.|
+|/users/{user_id}|	GET	|user_id (path)|	Realiza a busca de uma empresa específica utilizando seu ID único.	|Retorna 404 se o ID não for encontrado.|
+|/users/cadastro|	POST|	payload: UserCreate (body)|	Utilizada para o cadastro de novas empresas.	Retorna 400 se o E-mail ou CNPJ já estiverem cadastrados.|
+|/{user_id}/edit	|PUT	|user_id (path), payload: UserUpdate (body)|	Atualiza informações da empresa.	Não é permitido alterar os campos email, cnpj e created_at. Retorna 400 se tentar.|
+|/{user_id}/del	|DELETE	|user_id (path)|	Deleta o registro da empresa.|	Retorna 404 se o ID não for encontrado|
 
 
-### Rotas do tipo Put 
-1- 
-'''@router.put("/{user_id}", response_model=User)
-def update_user(user_id: str, payload: UserUpdate):
-    if user_id not in db:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
 
-    incoming = payload.dict(exclude_unset=True)
-    forbidden = {"email", "cnpj", "created_at"}
-    intersect = forbidden.intersection(incoming.keys())
-    if intersect:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Não é permitido alterar os campos: {', '.join(sorted(intersect))}."
-        )'''
 
-Essa rota é feita para atualizar as informaçoes das empresas exceto o Email, CNPJ, e a data de registro da empresa.
-*endpoint: http://127.0.0.1:8000/{id}/edit
-*endpoint: 
-### Rotas do tipo Delete
 
-1-
-'''
-@router.delete("/{user_id}/del", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(user_id: str):
-    if user_id not in db:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
-    del db[user_id]
-    save_db(db)
-    return None
-'''
+## ⚠️ Problemas e Sugestões de Melhoria
+Esta aplicação é funcional, mas atualmente armazena os dados em memória (in-memory storage), resultando na perda de todos os dados registrados após o desligamento da aplicação.
 
-Essa rota é utilizada para deletar as empresas cadastradas usando o seu ID
-*endpoint: http://127.0.0.1:8000/{id}/del
+**Sugestão de Melhoria Principal:**
+**Persistência de Dados:** Implementar um módulo de banco de dados (como SQLite, PostgreSQL ou MongoDB) para garantir que todos os dados registrados e atualizados sejam mantidos mesmo após o reinício da aplicação.
+
+## 🧑‍💻 Autor
+Desenvolvido por: **Carlos Daniel**
