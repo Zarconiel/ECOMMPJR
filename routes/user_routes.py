@@ -7,7 +7,7 @@ from typing import Dict
 from models.user_models import UserCreate, User, UserUpdate, UserEditable
 from database.json_db import db, save_db
 
-router = APIRouter(prefix="/users", tags=["Usuários"])
+router = APIRouter(prefix="/users", tags=["Empresa"])
 
 # ================================
 # Funções auxiliares
@@ -29,7 +29,7 @@ def cnpj_exists(cnpj: str) -> bool:
 # Rotas
 # ================================
 
-@router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
+@router.post("/cadastro", response_model=User, status_code=status.HTTP_201_CREATED)
 def create_user(payload: UserCreate):
     if email_exists(payload.email):
         raise HTTPException(status_code=400, detail="E-mail já cadastrado.")
@@ -66,7 +66,7 @@ def get_user_editable(user_id: str):
         "ramo": user.get("ramo")
     }
 
-@router.put("/{user_id}", response_model=User)
+@router.put("/{user_id}/edit", response_model=User)
 def update_user(user_id: str, payload: UserUpdate):
     if user_id not in db:
         raise HTTPException(status_code=404, detail="Usuário não encontrado.")
@@ -86,7 +86,7 @@ def update_user(user_id: str, payload: UserUpdate):
     save_db(db)
     return user
 
-@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{user_id}/del", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id: str):
     if user_id not in db:
         raise HTTPException(status_code=404, detail="Usuário não encontrado.")
