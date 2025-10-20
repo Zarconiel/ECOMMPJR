@@ -35,23 +35,28 @@ O projeto foi desenvolvido com as seguintes ferramentas e bibliotecas:
 ## 🧭Endpoints da API
 A documentação interativa (Swagger UI) está disponível em http://127.0.0.1:8000/docs.
 
-## Rsumo das rotas
-| Operação  | Método HTTP || Rota (Endpoint)|Finalidade |Status de Sucesso|
-| CREATE    | POST        || /users/cadastro| Registra uma nova empresa.|201 Created|
-| READ (Todos)| GET       || /users/ |Retorna a lista completa de empresas.|200 OK|
-| READ        | GET || /users/{user_id} | Busca uma empresa pelo ID.|200 OK|
-(Específico)
-| UPDATE| PUT             || /{user_id}/edit | Atualiza dados cadastrais da empresa (exceto e-mail/CNPJ/criação).|200 OK|
-| DELETE | DELETE         || /{user_id}/del | Remove o registro de uma empresa.|204 No Content|
+## 🧭 Resumo das Rotas
 
-## Detalhe dos Endpoints
+| 💼 Operação | ⚙️ Método HTTP | 🛣️ Endpoint | 🧩 Finalidade | ✅ Status de Sucesso |
+|:------------|:---------------:|:-------------|:--------------|:--------------------|
+| 🆕 CREATE | **POST** | `/users/cadastro` | Registra uma nova empresa | 201 Created |
+| 📜 READ (Todos) | **GET** | `/users/` | Retorna a lista completa de empresas | 200 OK |
+| 🔍 READ (Por ID) | **GET** | `/users/{user_id}` | Busca uma empresa específica pelo ID | 200 OK |
+| ✏️ UPDATE | **PUT** | `/{user_id}/edit` | Atualiza dados cadastrais (exceto e-mail/CNPJ/criação) | 200 OK |
+| ❌ DELETE | **DELETE** | `/{user_id}/del` | Remove o registro de uma empresa | 204 No Content |
+| 🔎 SEARCH | **GET** | `/users/search?ramo=Tech&cidade=Salvador` | Busca empresas por ramo e/ou cidade | 200 OK |
 
-|Rota|	Tipo|	Parâmetros / Body (Payload)|	Descrição da Funcionalidade|	Observações Importantes|
-|/users/|	GET	|Nenhum	|Lista todas as empresas cadastradas no sistema.|	Retorna uma lista de objetos User.|
-|/users/{user_id}|	GET	|user_id (path)|	Realiza a busca de uma empresa específica utilizando seu ID único.	|Retorna 404 se o ID não for encontrado.|
-|/users/cadastro|	POST|	payload: UserCreate (body)|	Utilizada para o cadastro de novas empresas.	Retorna 400 se o E-mail ou CNPJ já estiverem cadastrados.|
-|/{user_id}/edit	|PUT	|user_id (path), payload: UserUpdate (body)|	Atualiza informações da empresa.	Não é permitido alterar os campos email, cnpj e created_at. Retorna 400 se tentar.|
-|/{user_id}/del	|DELETE	|user_id (path)|	Deleta o registro da empresa.|	Retorna 404 se o ID não for encontrado|
+
+## 🧩 Detalhe dos Endpoints
+
+| 🛣️ Rota | 🔢 Tipo | 📦 Parâmetros / Body | 🧭 Descrição da Funcionalidade | ⚠️ Observações Importantes |
+|:---------|:--------:|:--------------------|:-------------------------------|:----------------------------|
+| `/users/` | **GET** | Nenhum | Lista todas as empresas cadastradas no sistema | Retorna uma lista de objetos `User` |
+| `/users/{user_id}` | **GET** | `user_id` *(path)* | Realiza a busca de uma empresa específica pelo ID | Retorna **404** se o ID não for encontrado |
+| `/users/cadastro` | **POST** | `payload: UserCreate` *(body)* | Cadastra uma nova empresa | Retorna **400** se o E-mail ou CNPJ já existirem |
+| `/{user_id}/edit` | **PUT** | `user_id` *(path)*, `payload: UserUpdate` *(body)* | Atualiza informações da empresa | Não é permitido alterar `email`, `cnpj` e `created_at` |
+| `/{user_id}/del` | **DELETE** | `user_id` *(path)* | Deleta o registro da empresa | Retorna **404** se o ID não for encontrado |
+| `/users/search` | **GET** | `ramo`, `cidade` *(query)* | Filtra empresas por ramo e/ou cidade | Retorna lista filtrada; ambos filtros são opcionais |
 
 
 
