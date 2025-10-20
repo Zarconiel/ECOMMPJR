@@ -3,6 +3,8 @@ import os
 from datetime import datetime
 from typing import Dict, Any
 
+
+#salvar informaçoes sem permanencia de dados
 DB_FILE = "data.json"
 
 def load_db() -> Dict[str, dict]:
